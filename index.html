@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#176b52">
+<title>RentCalc 2.0 — оренда нерухомості</title>
+<style>
+:root{--green:#176b52;--ink:#17231f;--muted:#66736d;--bg:#f4f7f5;--card:#fff;--line:#e0e8e3;--red:#a63d40;--gold:#b77717}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:620px;margin:auto;padding:16px 14px 38px}.top{display:flex;align-items:center;gap:12px;margin:8px 2px 18px}.logo{width:48px;height:48px;border-radius:15px;background:var(--green);color:white;display:grid;place-items:center;font-size:27px}h1{font-size:24px;margin:0}.subtitle{color:var(--muted);font-size:13px;margin-top:3px}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 14px}nav button{padding:11px 4px;font-size:13px;background:#e6ede8;color:var(--ink)}nav button.active{background:var(--green);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 4px 16px #173d2808}h2{font-size:17px;margin:0 0 14px}h3{font-size:15px;margin:16px 0 8px}.field{margin:12px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input,select{width:100%;padding:12px;border:1px solid #cbd8d0;border-radius:11px;font:inherit;background:#fff;color:var(--ink)}input:focus,select:focus{outline:2px solid #8dc8ad;border-color:var(--green)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hint,.small{font-size:12px;color:var(--muted);line-height:1.45}.rangehead{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:650}input[type=range]{padding:0;accent-color:var(--green);margin-top:10px}
+button{border:0;border-radius:11px;padding:11px 13px;font:inherit;font-weight:650;cursor:pointer}.primary{background:var(--green);color:white}.secondary{background:#e9efeb;color:var(--ink)}.danger{background:#fae8e7;color:var(--red)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.actions button{flex:1}.result{background:#eaf4ee;border:1px solid #d3e7da;border-radius:15px;padding:14px;margin-top:14px}.muted{color:var(--muted)}.big{font-size:27px;font-weight:800;letter-spacing:-.5px;color:var(--green);margin:4px 0 12px;overflow-wrap:anywhere}.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:white;border-radius:11px;padding:11px;min-width:0}.stat span{display:block;font-size:12px;color:var(--muted)}.stat strong{display:block;font-size:17px;margin-top:4px;overflow-wrap:anywhere}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#e7f1eb;color:var(--green);font-size:11px;font-weight:700}.property{border-top:1px solid var(--line);padding:13px 0}.property:first-child{border-top:0}.property-head{display:flex;justify-content:space-between;gap:10px}.property-name{font-weight:750}.property-meta{font-size:12px;color:var(--muted);margin-top:4px}.property-buttons{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}.property-buttons button{font-size:12px;padding:7px 9px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px;min-width:430px}th,td{text-align:right;padding:9px 7px;border-bottom:1px solid var(--line);white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:var(--muted);font-weight:650}.empty{padding:16px 0;color:var(--muted);font-size:13px}.hidden{display:none!important}.warning{background:#fff4dd;border-radius:10px;padding:10px;font-size:12px;color:#77531a;margin-top:10px}.footer{text-align:center;color:var(--muted);font-size:11px;line-height:1.5;padding:8px}
+</style>
+
+  <meta name="theme-color" content="#176b55">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+
+</head>
+<body>
+<main>
+<header class="top"><div class="logo">⌂</div><div><h1>RentCalc <span style="font-size:13px;color:#176b52">2.0</span></h1><div class="subtitle">Облік оренди · українською</div></div></header>
+<nav aria-label="Розділи"><button class="active" data-tab="calc">Калькулятор</button><button data-tab="homes">Мої квартири</button><button data-tab="report">Звіт і порівняння</button></nav>
+
+<section id="tab-calc">
+<div class="card">
+<h2 id="formTitle">Розрахунок квартири</h2>
+<div class="field"><label for="name">Назва об'єкта / місто</label><input id="name" maxlength="70" placeholder="Наприклад, Квартира в Києві" value="Моя квартира"></div>
+<div class="grid">
+<div class="field"><label for="price">Вартість, ₴</label><input id="price" type="number" min="0" inputmode="decimal" value="2000000"></div>
+<div class="field"><label for="rent">Оренда за місяць, ₴</label><input id="rent" type="number" min="0" inputmode="decimal" value="15000"></div>
+<div class="field"><label for="utilities">Комунальні витрати власника / міс., ₴</label><input id="utilities" type="number" min="0" inputmode="decimal" value="1000"></div>
+<div class="field"><label for="maintenance">Ремонт та обслуговування / міс., ₴</label><input id="maintenance" type="number" min="0" inputmode="decimal" value="1500"></div>
+<div class="field"><label for="other">Інші витрати / міс., ₴</label><input id="other" type="number" min="0" inputmode="decimal" value="500"></div>
+<div class="field"><label for="tax">Податок на дохід, %</label><input id="tax" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="5"></div>
+</div>
+<div class="field"><div class="rangehead"><label for="vacancy">Простій без орендаря на рік</label><strong id="vacancyLabel">1 місяць</strong></div><input id="vacancy" type="range" min="0" max="12" step="0.5" value="1"></div>
+<div class="result" aria-live="polite"><div class="small">Середній чистий дохід на місяць</div><div class="big" id="monthly">—</div><div class="stats"><div class="stat"><span>Чистий дохід за рік</span><strong id="yearly">—</strong></div><div class="stat"><span>Чиста річна дохідність</span><strong id="yield">—</strong></div><div class="stat"><span>Окупність</span><strong id="payback">—</strong></div><div class="stat"><span>Податок за рік</span><strong id="taxYear">—</strong></div></div></div>
+<p class="hint">Модель: дохід за орендовані місяці мінус податок із фактично отриманої оренди та щомісячні витрати власника за 12 місяців. Ставку податку введи відповідно до своєї ситуації.</p>
+<div class="actions"><button class="primary" id="save">Зберегти об'єкт</button><button class="secondary" id="clear">Очистити форму</button></div>
+<div id="formMessage" class="small" role="status"></div>
+</div>
+</section>
+
+<section id="tab-homes" class="hidden"><div class="card"><h2>Мої квартири</h2><p class="small">Збережені об'єкти залишаються в локальному сховищі цього браузера на пристрої.</p><div id="homesList" class="empty">Поки немає збережених квартир.</div><div class="actions"><button class="secondary" id="newHome">+ Додати квартиру</button><button class="secondary" id="export">Експорт даних</button><button class="secondary" id="importBtn">Імпорт даних</button><input id="importFile" type="file" accept="application/json,.json" class="hidden"></div><div class="hint">Резервну копію можна експортувати у JSON-файл. Не передавай його іншим, якщо містить приватні дані.</div></div></section>
+
+<section id="tab-report" class="hidden">
+<div class="card"><h2>Річний фінансовий звіт</h2><div id="reportSummary" class="empty">Збережи принаймні одну квартиру, щоб сформувати звіт.</div><div class="table-wrap" id="reportTable"></div><div class="actions"><button class="primary" id="exportReport">Завантажити звіт CSV</button></div></div>
+<div class="card"><h2>Порівняння квартир</h2><p class="small">Об'єкти відсортовано за чистою річною дохідністю від найбільшої до найменшої.</p><div class="table-wrap" id="compareTable"></div></div>
+</section>
+<div class="footer">RentCalc 2.0 · Результати орієнтовні, не є фінансовою чи податковою консультацією. Не враховано кредитні відсотки, витрати на придбання, великі непередбачені ремонти та можливу зміну ринкової ціни.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const ids=['name','price','rent','utilities','maintenance','other','tax','vacancy'];
+let editingId=null;
+const money=n=>Math.round(n).toLocaleString('uk-UA')+' ₴';
+const percent=n=>Number.isFinite(n)?n.toLocaleString('uk-UA',{minimumFractionDigits:2,maximumFractionDigits:2})+'%':'—';
+const num=id=>Number($(id).value);
+function readForm(){
+ return {name:$('name').value.trim()||'Без назви',price:num('price'),rent:num('rent'),utilities:num('utilities'),maintenance:num('maintenance'),other:num('other'),tax:num('tax'),vacancy:num('vacancy')};
+}
+function valid(x){return [x.price,x.rent,x.utilities,x.maintenance,x.other,x.tax,x.vacancy].every(Number.isFinite)&&x.price>0&&x.rent>=0&&x.utilities>=0&&x.maintenance>=0&&x.other>=0&&x.tax>=0&&x.tax<=100&&x.vacancy>=0&&x.vacancy<=12}
+function calc(x){
+ const occupied=Math.max(0,12-x.vacancy),gross=x.rent*occupied,tax=gross*x.tax/100;
+ const costs=(x.utilities+x.maintenance+x.other)*12;
+ const net=gross-tax-costs,monthly=net/12,rate=net/x.price*100;
+ return {...x,occupied,gross,tax,costs,net,monthly,rate,payback:net>0?x.price/net:null};
+}
+function calculate(){
+ $('vacancyLabel').textContent=Number($('vacancy').value).toLocaleString('uk-UA')+' міс.';
+ const x=readForm();if(!valid(x)){$('monthly').textContent='Перевір значення';$('yearly').textContent=$('yield').textContent=$('payback').textContent=$('taxYear').textContent='—';return null}
+ const c=calc(x);$('monthly').textContent=money(c.monthly);$('yearly').textContent=money(c.net);$('yield').textContent=percent(c.rate);$('payback').textContent=c.payback?c.payback.toLocaleString('uk-UA',{maximumFractionDigits:1})+' років':'Не окупається';$('taxYear').textContent=money(c.tax);return c;
+}
+ids.forEach(id=>$(id).addEventListener('input',calculate));
+function all(){try{const a=JSON.parse(localStorage.getItem('rentcalc2_homes')||'[]');return Array.isArray(a)?a:[]}catch{return []}}
+function store(a){try{localStorage.setItem('rentcalc2_homes',JSON.stringify(a));return true}catch{return false}}
+function safeText(s){return String(s??'')}
+function showTab(tab){
+ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ ['calc','homes','report'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==tab));
+ if(tab==='homes')renderHomes();if(tab==='report')renderReports();
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function resetForm(){
+ editingId=null;ids.forEach(id=>$(id).value=({name:'Моя квартира',price:2000000,rent:15000,utilities:1000,maintenance:1500,other:500,tax:5,vacancy:1})[id]);
+ $('formTitle').textContent='Розрахунок квартири';$('save').textContent='Зберегти об’єкт';$('formMessage').textContent='';calculate();
+}
+$('clear').onclick=()=>resetForm();
+$('newHome').onclick=()=>{resetForm();showTab('calc')};
+$('save').onclick=()=>{
+ const x=readForm();if(!valid(x)){ $('formMessage').textContent='Перевір значення: вартість має бути більшою за нуль, податок — від 0 до 100%.';return}
+ const a=all();if(editingId){const i=a.findIndex(z=>z.id===editingId);if(i>=0)a[i]={...x,id:editingId};else a.push({...x,id:String(Date.now())})}else a.push({...x,id:String(Date.now())});
+ if(!store(a)){$('formMessage').textContent='Не вдалося зберегти. Перевір вільне місце або налаштування браузера.';return}
+ $('formMessage').textContent='Об’єкт збережено.';renderHomes();
+};
+function loadHome(id){const x=all().find(z=>z.id===id);if(!x)return;ids.forEach(k=>$(k).value=x[k]??0);editingId=id;$('formTitle').textContent='Редагування об’єкта';$('save').textContent='Зберегти зміни';calculate();showTab('calc')}
+function renderHomes(){
+ const root=$('homesList'),a=all();root.innerHTML='';
+ if(!a.length){root.className='empty';root.textContent='Поки немає збережених квартир.';return}
+ root.className='';
+ a.forEach(x=>{const c=calc(x),item=document.createElement('div');item.className='property';const head=document.createElement('div');head.className='property-head';const left=document.createElement('div'),name=document.createElement('div');name.className='property-name';name.textContent=x.name;const meta=document.createElement('div');meta.className='property-meta';meta.textContent='Вартість '+money(x.price)+' · Чистий дохід '+money(c.net)+'/рік';left.append(name,meta);const pill=document.createElement('span');pill.className='pill';pill.textContent=percent(c.rate);head.append(left,pill);const buttons=document.createElement('div');buttons.className='property-buttons';[['Редагувати',()=>loadHome(x.id),'secondary'],['Порівняти',()=>showTab('report'),'secondary'],['Видалити',()=>{if(confirm('Видалити об’єкт «'+x.name+'»?')){store(all().filter(z=>z.id!==x.id));renderHomes();renderReports()}},'danger']].forEach(([t,fn,cl])=>{const b=document.createElement('button');b.className=cl;b.textContent=t;b.onclick=fn;buttons.append(b)});item.append(head,buttons);root.append(item)})
+}
+function table(headers,rows){
+ const t=document.createElement('table'),thead=document.createElement('thead'),tr=document.createElement('tr');
+ headers.forEach(h=>{const th=document.createElement('th');th.textContent=h;tr.append(th)});thead.append(tr);t.append(thead);
+ const body=document.createElement('tbody');rows.forEach(row=>{const r=document.createElement('tr');row.forEach(v=>{const td=document.createElement('td');td.textContent=safeText(v);r.append(td)});body.append(r)});t.append(body);return t;
+}
+function renderReports(){
+ const a=all().map(x=>calc(x));const summary=$('reportSummary'),rt=$('reportTable'),ct=$('compareTable');summary.innerHTML='';rt.innerHTML='';ct.innerHTML='';
+ if(!a.length){summary.className='empty';summary.textContent='Збережи принаймні одну квартиру, щоб сформувати звіт.';return}
+ const totalGross=a.reduce((s,x)=>s+x.gross,0),totalTax=a.reduce((s,x)=>s+x.tax,0),totalCosts=a.reduce((s,x)=>s+x.costs,0),totalNet=a.reduce((s,x)=>s+x.net,0);
+ summary.className='stats';
+ [['Оренда за рік',money(totalGross)],['Податки за рік',money(totalTax)],['Витрати за рік',money(totalCosts)],['Чистий дохід за рік',money(totalNet)]].forEach(([k,v])=>{const d=document.createElement('div');d.className='stat';const s=document.createElement('span');s.textContent=k;const b=document.createElement('strong');b.textContent=v;d.append(s,b);summary.append(d)});
+ rt.append(table(['Об’єкт','Оренда','Податок','Витрати','Чистий дохід'],a.map(x=>[x.name,money(x.gross),money(x.tax),money(x.costs),money(x.net)])));
+ const sorted=[...a].sort((x,y)=>y.rate-x.rate);
+ ct.append(table(['Об’єкт','Чистий дохід/рік','Дохідність','Окупність'],sorted.map(x=>[x.name,money(x.net),percent(x.rate),x.payback?x.payback.toLocaleString('uk-UA',{maximumFractionDigits:1})+' р.':'—'])));
+}
+$('export').onclick=()=>download('rentcalc-backup.json',JSON.stringify(all(),null,2),'application/json');
+function download(name,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('importBtn').onclick=()=>$('importFile').click();
+$('importFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(!Array.isArray(parsed)||!parsed.every(x=>x&&typeof x==='object'&&typeof x.name==='string'&&Number(x.price)>0))throw Error('bad');if(confirm('Замінити поточний список '+all().length+' об’єктів даними з файлу ('+parsed.length+')?')){store(parsed.map((x,i)=>({...x,id:String(x.id||Date.now()+i)})));renderHomes();renderReports();alert('Імпорт завершено.')}}catch{alert('Не вдалося прочитати файл. Вибери JSON-резервну копію RentCalc.')}e.target.value=''};
+$('exportReport').onclick=()=>{const a=all().map(calc);if(!a.length){alert('Спочатку збережи квартиру.');return}const rows=[['Об’єкт','Вартість, UAH','Оренда за рік, UAH','Податок, UAH','Комунальні за рік, UAH','Ремонт за рік, UAH','Інші витрати за рік, UAH','Чистий дохід за рік, UAH','Дохідність, %','Простій, місяців'],...a.map(x=>[x.name,x.price,x.gross,x.tax,x.utilities*12,x.maintenance*12,x.other*12,x.net,x.rate,x.vacancy])];const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');download('rentcalc-zvit.csv',csv,'text/csv;charset=utf-8')};
+calculate();renderHomes();renderReports();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./service-worker.js').catch(function (err) {
+      console.log('Service worker registration failed:', err);
+    });
+  });
+}
+</script>
+
+</body></html>
